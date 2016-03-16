@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var ed25519 = require('ed25519');
 
 /*
-	1.生成密钥对
+  1.生成密钥对
 */
 
 // Bob认为美国国家安全局会在随机数生成器背后留后门，于是决定用一个密码
@@ -12,7 +12,7 @@ var hash = crypto.createHash('sha256').update(bobsPassword).digest(); //returns 
 var bobKeypair = ed25519.MakeKeypair(hash);
 
 /*
-	2.给信息加密和签名
+  2.给信息加密和签名
 */
 var message = 'Hi Alice, I love you!';
 var msgCiphered = cipher('aes192', bobKeypair.privateKey, message);
@@ -25,7 +25,7 @@ var signature = ed25519.Sign(new Buffer(msgCiphered, 'utf8'), bobKeypair.private
 // 作为Bob的好朋友，Alice有它的公约，可以验证。
 if (ed25519.Verify(new Buffer(msgCiphered, 'utf8'), signature, bobKeypair.publicKey)) {
 	// Bob相信该信息，因为验证函数返回了true.
-  var msg = decipher('aes192', bobKeypair.privateKey, msgCiphered);
+  var msg = decipher('aes192', bobKeypair.publicKey, msgCiphered);
 
 	console.log('签名合法！');
   console.log('Bob said: ', msg);
