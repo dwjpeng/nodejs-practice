@@ -15,7 +15,7 @@ var bobKeypair = ed25519.MakeKeypair(hash);
   2.给信息加密和签名
 */
 var message = 'Hi Alice, I love you!';
-var msgCiphered = cipher('aes192', bobKeypair.privateKey, message);
+var msgCiphered = cipher('aes192', bobKeypair.publicKey, message);
 var signature = ed25519.Sign(new Buffer(msgCiphered, 'utf8'), bobKeypair.privateKey);
 
 /**
@@ -27,7 +27,7 @@ if (ed25519.Verify(new Buffer(msgCiphered, 'utf8'), signature, bobKeypair.public
 	// Bob相信该信息，因为验证函数返回了true.
   var msg = decipher('aes192', bobKeypair.publicKey, msgCiphered);
 
-	console.log('签名合法！');
+	console.log('签名合法，信息来之Bob！');
   console.log('Bob said: ', msg);
 } else {
 	// Bob不相信，验证函数返回了false.
